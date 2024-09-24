@@ -8,8 +8,8 @@ const queryClient = new QueryClient();
 const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
-      <LandingPage />
-      {/* <Dashboard /> */}
+      {/* <LandingPage /> */}
+      <Dashboard />
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   );

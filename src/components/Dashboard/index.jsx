@@ -3,13 +3,13 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import BookmarksTab from "./BookmarksTab";
 import ExploreTab from "./ExploreTab";
 import { Navigate } from "react-router-dom";
-
-const isLoggedIn = true;
+import useLoginData from "@/hooks/useLoginData";
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState("bookmarks");
+  const [logInData] = useLoginData();
 
-  if (!isLoggedIn) {
+  if (!logInData) {
     return <Navigate to="/login" replace />;
   }
 

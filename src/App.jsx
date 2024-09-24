@@ -3,6 +3,7 @@ import LandingPage from "./components/LandingPage";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
+import ErrorPage from "./components/ErrorPage";
 
 const queryClient = new QueryClient();
 
@@ -16,6 +17,7 @@ const App = () => {
           <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
       ),
+      errorElement: <ErrorPage />,
       children: [
         {
           path: "/",

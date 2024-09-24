@@ -4,7 +4,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
-import Card from "../Card";
+import Card from "./ExploreCard";
 import useSearchRepos from "@/hooks/useSearchRepos";
 import useSearchUsers from "@/hooks/useSearchUsers";
 

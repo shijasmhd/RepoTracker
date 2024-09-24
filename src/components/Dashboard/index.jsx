@@ -2,9 +2,16 @@ import { useState } from "react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import BookmarksTab from "./BookmarksTab";
 import ExploreTab from "./ExploreTab";
+import { Navigate } from "react-router-dom";
+
+const isLoggedIn = true;
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState("bookmarks");
+
+  if (!isLoggedIn) {
+    return <Navigate to="/login" replace />;
+  }
 
   return (
     <div className="flex h-screen bg-gradient-to-b from-gray-900 to-gray-800">

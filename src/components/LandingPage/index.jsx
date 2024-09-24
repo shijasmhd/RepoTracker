@@ -2,9 +2,13 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import LoginForm from "./LoginForm";
 import SignupForm from "./SignupForm";
+import { useParams } from "react-router-dom";
 
 const LandingPage = () => {
-  const [activeForm, setActiveForm] = useState(null);
+  const { tab } = useParams();
+  const [activeForm, setActiveForm] = useState(
+    ["login", "signup"].includes(tab) ? tab : null
+  );
 
   const handleFormToggle = (form) => {
     setActiveForm(form);

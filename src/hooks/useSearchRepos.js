@@ -5,10 +5,7 @@ const useSearchRepos = (repoName) => {
   return useQuery({
     queryKey: ["searchRepos", repoName],
     queryFn: () => getGitHubRepos(repoName),
-    select: (resp) => {
-      console.log(resp);
-      return resp?.data?.items;
-    },
+    select: (resp) => resp?.data?.items,
     enabled: !!repoName,
   });
 };

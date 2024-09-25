@@ -30,3 +30,7 @@ export const logInUser = (values) => {
 export const createUser = (values) => {
   return axios.post(authUrl + "register", values);
 };
+
+export const uploadCsv = (formData, userId) => {
+  return axios.post(userBookmarksUrl + userId + "/bookmarks/upload", formData);
+};

@@ -1,6 +1,7 @@
+import { LocalStorageKey } from "@/config";
 import { useState } from "react";
 
-const KEY = "secretKey";
+const KEY = LocalStorageKey;
 
 const useLoginData = () => {
   const getLoginData = () => {

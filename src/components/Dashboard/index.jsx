@@ -1,18 +1,21 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import BookmarksTab from "./BookmarksTab";
 import ExploreTab from "./ExploreTab";
-import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import useLoginData from "@/hooks/useLoginData";
 import LogOutBtn from "./LogOutBtn";
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState("bookmarks");
   const [logInData] = useLoginData();
+  const navigate = useNavigate();
 
-  if (!logInData) {
-    return <Navigate to="/login" replace />;
-  }
+  useEffect(() => {
+    if (!logInData) {
+      navigate("/login", { replace: true });
+    }
+  });
 
   return (
     <div className="flex h-screen bg-gradient-to-b from-gray-900 to-gray-800">

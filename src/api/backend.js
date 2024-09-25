@@ -1,5 +1,5 @@
-import { userBookmarksUrl } from "@/config";
-import axios from "axios";
+import { authUrl, userBookmarksUrl } from "@/config";
+import axios from "@/utils/axiosInstance";
 
 export const getUserBookMarks = (userId) => {
   return axios.get(userBookmarksUrl + userId + "/bookmarks");
@@ -21,4 +21,12 @@ export const deleteBookMark = (data) => {
   return axios.delete(
     userBookmarksUrl + data.userId + "/bookmarks/" + data.bookMarkId
   );
+};
+
+export const logInUser = (values) => {
+  return axios.post(authUrl + "login", values);
+};
+
+export const createUser = (values) => {
+  return axios.post(authUrl + "register", values);
 };

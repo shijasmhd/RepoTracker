@@ -30,7 +30,7 @@ const BookmarksTab = () => {
       </div>
       <Input
         type="text"
-        placeholder="Search bookmarks"
+        placeholder="Search your bookmarks"
         value={bookmarkSearch}
         onChange={(e) => setBookmarkSearch(e.target.value)}
         className="mb-4 bg-input"

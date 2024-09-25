@@ -1,15 +1,15 @@
 import { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import axios from "axios";
-import { authUrl } from "@/config";
 import { useNavigate } from "react-router-dom";
 import useLoginData from "@/hooks/useLoginData";
+import useSignUpUser from "@/hooks/useSignUpUser";
 
 const SignupForm = () => {
   const [emailTaken, setEmailTaken] = useState(false);
   const navigate = useNavigate();
   const [, setLogInData] = useLoginData();
+  const { signUpUser } = useSignUpUser();
 
   const formik = useFormik({
     initialValues: {
@@ -30,24 +30,30 @@ const SignupForm = () => {
     }),
     onSubmit: async (values, { setSubmitting }) => {
       setEmailTaken(false);
-      try {
-        await axios.post(authUrl + "register", {
+      signUpUser(
+        {
           userName: values.email,
           password: values.password,
-        });
-
-        setLogInData(null);
-        navigate("/login");
-        window.location.reload();
-      } catch (error) {
-        if (
-          error.response.status === 400 &&
-          error.response.data.message === "userName already taken"
-        ) {
-          setEmailTaken(true);
+        },
+        {
+          onSuccess: () => {
+            setLogInData(null);
+            navigate("/login", { replace: true });
+            window.location.reload();
+          },
+          onError: (error) => {
+            if (
+              error.response.status === 400 &&
+              error.response.data.message === "userName already taken"
+            ) {
+              setEmailTaken(true);
+            }
+          },
+          onSettled: () => {
+            setSubmitting(false);
+          },
         }
-      }
-      setSubmitting(false);
+      );
     },
   });
 

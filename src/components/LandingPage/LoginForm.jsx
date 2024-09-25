@@ -1,22 +1,24 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import * as Yup from "yup";
 import { useFormik } from "formik";
-import axios from "axios";
-import { authUrl } from "@/config";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import useLoginData from "@/hooks/useLoginData";
+import useLogInUser from "@/hooks/useLogInUser";
 
 const LoginForm = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
   const [logInData, setLogInData] = useLoginData();
+  const { loginUser } = useLogInUser();
 
-  if (logInData) {
-    return <Navigate to="/dashboard" />;
-  }
+  useEffect(() => {
+    if (logInData) {
+      navigate("/dashboard");
+    }
+  });
 
   const formik = useFormik({
     initialValues: {
@@ -33,18 +35,24 @@ const LoginForm = () => {
     }),
     onSubmit: async (values, { setSubmitting }) => {
       setErrorMessage("");
-      try {
-        const userData = await axios.post(authUrl + "login", {
+      loginUser(
+        {
           userName: values.email,
           password: values.password,
-        });
-
-        setLogInData(userData?.data);
-        navigate("/dashboard");
-      } catch (error) {
-        setErrorMessage(error?.response?.data?.message);
-      }
-      setSubmitting(false);
+        },
+        {
+          onSuccess: async (userData) => {
+            await setLogInData(userData?.data);
+            navigate("/dashboard");
+          },
+          onError: (error) => {
+            setErrorMessage(error?.response?.data?.message);
+          },
+          onSettled: () => {
+            setSubmitting(false);
+          },
+        }
+      );
     },
   });
 

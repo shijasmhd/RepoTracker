@@ -28,6 +28,16 @@ const BookmarksTab = () => {
       <div className="mb-10">
         <BookMarkChart userId={logInData?.id} />
       </div>
+      <div className="flex justify-center items-center my-10">
+        <div className="flex flex-col justify-center items-center w-full">
+          <h1 className="text-3xl font-extrabold text-primary-foreground mb-3">
+            Your saved bookmarks appears here!
+          </h1>
+          <h1 className="text-xl text-primary-foreground">
+            add new from explore tab
+          </h1>
+        </div>
+      </div>
       <Input
         type="text"
         placeholder="Search your bookmarks"

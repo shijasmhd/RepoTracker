@@ -12,7 +12,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { AlertCircle, Upload, CheckCircle, XCircle } from "lucide-react";
+import { AlertCircle, Upload, CheckCircle } from "lucide-react";
 import useLoginData from "@/hooks/useLoginData";
 
 export default function CsvUploadBtn() {

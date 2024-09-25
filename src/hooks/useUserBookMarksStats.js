@@ -1,11 +1,12 @@
 import { getUserBookMarksStats } from "@/api/backend";
 import { useQuery } from "@tanstack/react-query";
 
-const useUserBookMarksStats = () => {
+const useUserBookMarksStats = (userId) => {
   return useQuery({
     queryKey: ["bookmarkStats"],
-    queryFn: getUserBookMarksStats,
+    queryFn: () => getUserBookMarksStats(userId),
     select: (resp) => resp.data,
+    enabled: !!userId,
   });
 };
 

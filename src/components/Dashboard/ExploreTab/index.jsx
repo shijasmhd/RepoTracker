@@ -7,6 +7,10 @@ import { Button } from "@/components/ui/button";
 import Card from "./ExploreCard";
 import useSearchRepos from "@/hooks/useSearchRepos";
 import useSearchUsers from "@/hooks/useSearchUsers";
+import useUserBookMarks from "@/hooks/useUserBookMarks";
+import useLoginData from "@/hooks/useLoginData";
+import useAddBookmark from "@/hooks/useAddBookmark";
+import { useQueryClient } from "@tanstack/react-query";
 
 const ExploreTab = () => {
   const [repoSearch, setRepoSearch] = useState("");
@@ -19,7 +23,16 @@ const ExploreTab = () => {
   const { data: searchedRepos } = useSearchRepos(repoSearchQuery.trim());
   const { data: searchedUsers } = useSearchUsers(userSearchQuery.trim());
 
-  // For debouncing & hiding user search box
+  const [logInData] = useLoginData();
+  // users bookmarks
+  const { data: bookmarks } = useUserBookMarks(logInData?.id);
+  const bookMarksObj = bookmarks?.reduce((acc, bookmark) => {
+    acc[bookmark.id] = bookmark;
+    return acc;
+  }, {});
+
+  const client = useQueryClient();
+  // For debouncing repo search & hiding user search box
   useEffect(() => {
     const timer = setTimeout(
       () => {
@@ -31,7 +44,7 @@ const ExploreTab = () => {
     return () => clearTimeout(timer);
   }, [repoSearch]);
 
-  // For debouncing & hiding repo search box
+  // For debouncing user search & hiding repo search box
   useEffect(() => {
     const timer = setTimeout(
       () => {
@@ -43,9 +56,7 @@ const ExploreTab = () => {
     return () => clearTimeout(timer);
   }, [userSearch]);
 
-  const addBookmark = (repo) => {
-    console.log("Adding bookmark:", repo.url);
-  };
+  const { addBookMark, addingBookMark, variables } = useAddBookmark();
 
   return (
     <TabsContent value="explore">
@@ -81,13 +92,38 @@ const ExploreTab = () => {
           </div>
         )}
       </div>
-      <ScrollArea className="h-[300px]">
+      <ScrollArea className="h-auto">
         {searchedRepos?.length < 1 ? (
           <h1 className="text-muted-foreground mx-auto">No Repos found!</h1>
         ) : (
           searchedRepos?.map((repo) => (
             <Card key={repo.id} data={repo}>
-              <Button onClick={() => addBookmark(repo)}>Add Bookmark</Button>
+              {!bookMarksObj[repo.id] && (
+                <Button
+                  onClick={() => {
+                    addBookMark(
+                      {
+                        bookMarkId: repo.id,
+                        url: repo.url,
+                        userId: logInData.id,
+                      },
+                      {
+                        onSuccess: () => {
+                          client.invalidateQueries([
+                            "bookmarks",
+                            "bookmarkStats",
+                          ]);
+                        },
+                      }
+                    );
+                  }}
+                  disabled={addingBookMark}
+                >
+                  {addingBookMark && variables.bookMarkId === repo.id
+                    ? "Adding..."
+                    : "Add Bookmark"}
+                </Button>
+              )}
             </Card>
           ))
         )}

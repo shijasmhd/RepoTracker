@@ -39,7 +39,7 @@ const LoginForm = () => {
           password: values.password,
         });
 
-        setLogInData(userData);
+        setLogInData(userData?.data);
         navigate("/dashboard");
       } catch (error) {
         setErrorMessage(error?.response?.data?.message);

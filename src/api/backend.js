@@ -1,12 +1,24 @@
 import { userBookmarksUrl } from "@/config";
 import axios from "axios";
 
-const userId = "1727001756845-045a3271bcfa";
-
-export const getUserBookMarks = () => {
+export const getUserBookMarks = (userId) => {
   return axios.get(userBookmarksUrl + userId + "/bookmarks");
 };
 
-export const getUserBookMarksStats = () => {
+export const getUserBookMarksStats = (userId) => {
   return axios.get(userBookmarksUrl + userId + "/bookmarks/stats");
+};
+
+export const postBookMark = (data) => {
+  const { userId, url, bookMarkId } = data;
+  return axios.post(userBookmarksUrl + userId + "/bookmarks", {
+    url,
+    bookMarkId,
+  });
+};
+
+export const deleteBookMark = (data) => {
+  return axios.delete(
+    userBookmarksUrl + data.userId + "/bookmarks/" + data.bookMarkId
+  );
 };

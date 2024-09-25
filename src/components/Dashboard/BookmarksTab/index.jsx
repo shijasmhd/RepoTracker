@@ -7,24 +7,26 @@ import BookMarkChart from "./BookmarkChart";
 import CsvUploadBtn from "./CsvUploadBtn";
 import Card from "./BookmarkCard";
 import useUserBookMarks from "@/hooks/useUserBookMarks";
+import useLoginData from "@/hooks/useLoginData";
+import useRemoveBookmark from "@/hooks/useRemoveBookmark";
+import { useQueryClient } from "@tanstack/react-query";
 
 const BookmarksTab = () => {
   const [bookmarkSearch, setBookmarkSearch] = useState("");
-
-  const { data: bookmarks, isError } = useUserBookMarks();
+  const [logInData] = useLoginData(); // TODO: Need to give as context
+  const { data: bookmarks, isError, error } = useUserBookMarks(logInData?.id);
 
   const filteredBookmarks = bookmarks?.filter((bookmark) =>
     bookmark?.repoName?.toLowerCase().includes(bookmarkSearch.toLowerCase())
   );
 
-  const removeBookmark = (id) => {
-    console.log("Removing bookmark:", id);
-  };
+  const client = useQueryClient();
+  const { removeBookMark, removingBookMark, variables } = useRemoveBookmark();
 
   return (
     <TabsContent value="bookmarks">
       <div className="mb-10">
-        <BookMarkChart />
+        <BookMarkChart userId={logInData?.id} />
       </div>
       <Input
         type="text"
@@ -36,19 +38,37 @@ const BookmarksTab = () => {
       <ScrollArea className="min-h-28 h-fit mb-5 rounded">
         {isError || filteredBookmarks?.length < 1 ? (
           <div className="flex justify-center w-full">
-            <div>
-              <h1 className="text-primary-foreground">Nothing to show!</h1>
-            </div>
+            <h1 className="text-primary-foreground">
+              {isError ? error.message : "Nothing to show!"}
+            </h1>
           </div>
         ) : (
           filteredBookmarks?.map((bookmark) => (
             <Card key={bookmark.id} data={bookmark}>
               <Button
-                onClick={() => removeBookmark(bookmark.id)}
+                onClick={() => {
+                  removeBookMark(
+                    {
+                      bookMarkId: bookmark.id,
+                      userId: logInData.id,
+                    },
+                    {
+                      onSuccess: () => {
+                        client.invalidateQueries([
+                          "bookmarks",
+                          "bookmarkStats",
+                        ]);
+                      },
+                    }
+                  );
+                }}
                 variant="destructive"
                 className="mr-3"
+                disabled={removingBookMark}
               >
-                Remove
+                {removingBookMark && variables.bookMarkId === bookmark.id
+                  ? "Removing..."
+                  : "Remove"}
               </Button>
             </Card>
           ))

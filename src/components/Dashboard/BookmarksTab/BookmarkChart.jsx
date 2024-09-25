@@ -10,8 +10,18 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-const BookMarkChart = () => {
-  const { data: bookmarkStats } = useUserBookMarksStats();
+const BookMarkChart = ({ userId }) => {
+  const { data: bookmarkStats } = useUserBookMarksStats(userId);
+
+  if (!bookmarkStats || bookmarkStats?.length < 1) {
+    return (
+      <div className="flex bg-gray-800 justify-center items-center w-100 h-[100px]">
+        <h1 className="text-primary-foreground p-2">
+          No data for graph! Add new bookmarks from explore tab
+        </h1>
+      </div>
+    );
+  }
 
   return (
     <ResponsiveContainer width="100%" height={300}>

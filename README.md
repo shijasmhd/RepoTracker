@@ -65,6 +65,12 @@ To run the linter:
 npm run lint
 ```
 
+## Sample CSV file to check csv upload functionality
+
+```bash
+./github_repo_urls.csv
+```
+
 ## Project Structure
 
 - `src/`

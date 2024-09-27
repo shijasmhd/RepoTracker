@@ -130,7 +130,18 @@ const ExploreTab = () => {
         {searchedUsers?.length < 1 ? (
           <h1 className="text-muted-foreground mx-auto">No Users found!</h1>
         ) : (
-          searchedUsers?.map((user) => <Card key={user.id} data={user} />)
+          searchedUsers?.map((user) => (
+            <Card key={user.id} data={user}>
+              <Button
+                onClick={() => {
+                  setUserSearch("");
+                  setRepoSearch(`user:${user.login}`);
+                }}
+              >
+                See repos
+              </Button>
+            </Card>
+          ))
         )}
       </ScrollArea>
     </TabsContent>
